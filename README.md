@@ -28,3 +28,43 @@ the `lib/src/localization` directory.
 To support additional languages, please visit the tutorial on
 [Internationalizing Flutter
 apps](https://flutter.dev/docs/development/accessibility-and-localization/internationalization)
+
+# Naming
+
+## AVOID
+~task~
+~to-do~
+~item~
+~work~
+~duty~
+~project~
+
+## Intention/Planning
+try
+wish
+aim
+intention
+intent
+hope
+plan
+step
+goal
+
+## Thinking
+idea
+thought
+
+## Hypothesis/Trial
+hunch
+theory
+
+## Notation
+memo
+notion
+jot
+note
+scribble
+
+## Helper
+aide
+reminder
