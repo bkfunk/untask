@@ -1,62 +1,53 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:untask/src/common/ui/choice_chip_set_controller.dart';
 
 // TODO: Add ChoiceChipSection with a divider and optional headline
+// part 'choice_chip_set.g.dart';
 
-class ChoiceChipSet extends ConsumerWidget {
-  final ChoiceChipSetController controller;
+// @riverpod
+class ChoiceChipSet extends ConsumerStatefulWidget {
   final double spacing;
+  final List<ChoiceChipValue> choices;
 
   const ChoiceChipSet({
     super.key,
-    required this.controller,
     this.spacing = 5.0,
+    required this.choices,
   });
-  // const ChoiceChipSet({
-  //   Key? key,
-  //   required this.chipLabels,
-  //   this.spacing = 5.0,
-  // }) : super(key: key);
-
-  // final List<String> chipLabels;
-  // final double spacing;
-  // // final ChoiceChipSetController controller;
-
-  // ChoiceChipSetValue? get selectedChoice {
-  //   return foo;
-  // }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChoiceChipSet> createState() => _ChoiceChipSetState();
+}
+
+// @riverpod
+class _ChoiceChipSetState extends ConsumerState<ChoiceChipSet> {
+  ChoiceChipValue? selectedChoice;
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("Choices: ${widget.choices.toString()}");
     return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Wrap(
-          spacing: spacing,
-          children: controller.choices.keys
-              .map((label) => ChoiceChip(
-                    label: Text(label),
-                    selected: controller.selectedLabel == label,
-                    onSelected: (isSelected) {
-                      isSelected
-                          ? controller.select(label)
-                          : controller.unselect();
-                    },
-                  ))
-              .toList(),
-        ));
+      padding: const EdgeInsets.all(8.0),
+      child: Wrap(
+        spacing: widget.spacing,
+        children: [
+          for (var choice in widget.choices)
+            ChoiceChip(
+              label: Text(choice.label),
+              selected: selectedChoice == choice,
+              onSelected: (isSelected) {
+                setState(() => isSelected
+                    ? selectedChoice = choice
+                    : selectedChoice = null);
+              },
+            )
+        ],
+      ),
+    );
   }
 }
 
-typedef ChoiceChipValue<T> = (String label, T value);
-
-// class _ChoiceChipSetState extends ConsumerState<ChoiceChipSet> {
-//   int? _selected;
-//   int foo = 3;
-
-//   ChoiceChipSetValue? get selectedChoice {
-//     if (_selected == null) return null;
-//     return ChoiceChipSetValue(widget.chipLabels, _selected);
-//   }
-// }
+/// A ChoiceChipValue is just a record that connects the label (for display)
+/// to a value of type T
+typedef ChoiceChipValue<T> = ({String label, T value});
