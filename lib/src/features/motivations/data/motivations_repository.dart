@@ -1,10 +1,13 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/motivation.dart';
+
+part 'motivations_repository.g.dart';
 
 abstract class MotivationsRepository {
   Motivation? getMotivation(MotivationID id);
   Stream<List<Motivation>> watchMotivationsList();
+  Future<List<Motivation>> fetchMotivationsList();
   Stream<Motivation?> watchMotivation(MotivationID id);
 }
 
@@ -25,6 +28,11 @@ class FakeMotivationsRepository implements MotivationsRepository {
   }
 
   @override
+  Future<List<Motivation>> fetchMotivationsList() async {
+    return Future.value(fakeMotivations);
+  }
+
+  @override
   Stream<Motivation?> watchMotivation(MotivationID id) {
     return watchMotivationsList()
         .map((motivations) => _getMotivation(motivations, id));
@@ -40,15 +48,22 @@ class FakeMotivationsRepository implements MotivationsRepository {
   }
 }
 
-final motivationsRepositoryProvider = Provider<MotivationsRepository>((ref) {
+@riverpod
+MotivationsRepository motivationsRepository(MotivationsRepositoryRef ref) {
   return FakeMotivationsRepository();
-});
+}
 
 final motivationsListStreamProvider =
     StreamProvider.autoDispose<List<Motivation>>((ref) {
   final motivationsRepository = ref.watch(motivationsRepositoryProvider);
   return motivationsRepository.watchMotivationsList();
 });
+
+@riverpod
+Future<List<Motivation>> motivationsList(MotivationsListRef ref) {
+  final motivationsRepository = ref.watch(motivationsRepositoryProvider);
+  return motivationsRepository.fetchMotivationsList();
+}
 
 final motivationProvider =
     StreamProvider.autoDispose.family<Motivation?, MotivationID>((ref, id) {

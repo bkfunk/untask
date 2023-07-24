@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:untask/src/common/ui/choice_chip_set.dart';
 import 'package:untask/src/features/memos/ui/create_memo_form_controller.dart';
-
-import '../../../common/ui/choice_chip_set_form_field.dart';
+import 'package:untask/src/features/motivations/data/motivations_repository.dart';
 
 class CreateMemoForm extends ConsumerStatefulWidget {
   const CreateMemoForm({super.key});
@@ -17,49 +17,50 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(createMemoFormControllerProvider);
-    // const ChoiceChipSet choiceChipSet =
-    // ChoiceChipSet(chipLabels: ['1', '2', '3']);
-    // final chipSet =
-    // ChoiceChipSetController(ChoiceChipSetValue({'One': 1, 'Two': 2}));
-    final chipField = ChoiceChipSetFormField<int>(const {'One': 1, 'Two': 2});
+    // final currentAccount = ref.watch(currentAccountProvider);
+    // debugPrint("Current Account: ${currentAccount.value?.toString()}");
+    // final List<MotivationID> motivationIDs = currentAccount.when(
+    // data: (data) => data?.prefs['motivationIDs'],
+    // loading: () => [],
+    // error: (e, st) => []);
+    final motivations = ref.watch(motivationsListProvider);
+    debugPrint("Motivations: ${motivations.toString()}");
     return Form(
-        key: _formKey,
-        child: Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: Column(
-              children: <Widget>[
-                const Text('Title'),
-                TextFormField(
-                  enabled: !state.isLoading,
-                  initialValue: "Foo",
-                ),
-                const Text('I can do this in...'),
-                chipField,
-                // FormField<int>(
-                //   builder: (field) {
-                //     return ChoiceChipSet(controller: chipSet);
-                //   },
-                // ),
-                /* TODO?: Somehow we have to have access to the choice chip set
-                 selected value. But the choice chip set doesn't exist outside
-                 the builder closure. So we can't get it out.
-                 */
-                // FormField<int?>(
-                //   initialValue: null,
-                //   builder: (field) {
-                //     debugPrint("Form field: ${field.value}");
-                //     return choiceChipSet;
-                //   },
-                //   onSaved: (newValue) {
-                //     debugPrint("Saved: $newValue; ${choiceChipSet.");
-                //   },
-                // ),
-                // ChoiceChipSetFormField(
-                //   value: ChoiceChipSetValue(['a', 'b', 'c'], null),
-                // ),
-                ElevatedButton(onPressed: _submit, child: const Text('Submit'))
-              ],
-            )));
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: Column(
+          children: <Widget>[
+            const Text('Title'),
+            TextFormField(
+              enabled: !state.isLoading,
+              initialValue: "Foo",
+            ),
+            const Text('I can do this in...'),
+            motivations.when(
+              data: (motivs) {
+                debugPrint("Motivations: ${motivs.toString()}");
+                return ChoiceChipSet(
+                    choices: motivs
+                        .map((e) => (label: e.description, value: e.id))
+                        .toList());
+              },
+              loading: () => const Text('loading'),
+              error: (error, stackTrace) => const Text('Error'),
+            ),
+            // ChoiceChipSet(
+            //   choices: motivationIDs
+            //       .map(
+            //         (el) => (label: el, value: el),
+            //       )
+            //       .toList(),
+            // ),
+            // choices: [(label: "1", value: 1), (label: "2", value: 2)]),
+            ElevatedButton(onPressed: _submit, child: const Text('Submit'))
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _submit() async {
@@ -72,61 +73,3 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
     // TODO add params to submit
   }
 }
-// /// Form containing all the inputs for a memo
-// class CreateMemoForm extends ConsumerStatefulWidget {
-//   const CreateMemoForm({super.key});
-
-//   @override
-//   ConsumerState<CreateMemoForm> createState() => _CreateMemoFormState();
-// }
-
-// class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
-//   final _formKey = GlobalKey<FormState>();
-//   final _timeSelection = <int>{};
-
-//   @override
-//   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-//     // TODO: implement toString
-//     return 'Foo';
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Form(
-//       key: _formKey,
-//       child: Column(
-//         children: <Widget>[
-//           TextFormField(autofocus: true),
-//           // const ChoiceChipSet(
-//           // chipLabels: ["< 2 min.", "< 10 min.", "< 30 min."]),
-//           // const ChoiceChipSet(chipLabels: ["> 5 min.", "> 10 min"]),
-//           const MotivationSelector(
-//               // formKey: _formKey,
-//               ),
-//           ElevatedButton(
-//             child: const Text('Submit'),
-//             onPressed: () {
-//               _formKey.currentState?.save();
-//               // print(_formKey.currentState.toString());
-//             },
-//           )
-//           // SegmentedButton(
-//           //   segments: const [
-//           //     ButtonSegment(value: 0, label: Text('< 2')),
-//           //     ButtonSegment(value: 1, label: Text('2+')),
-//           //   ],
-//           //   selected: _timeSelection,
-//           //   onSelectionChanged: (Set<int> newSelection) {
-//           //     setState(() {
-//           //       if (newSelection.isNotEmpty) {
-//           //         _timeSelection = <int>{newSelection.first};
-//           //       }
-//           //     });
-//           //   },
-//           //   emptySelectionAllowed: true,
-//           // ),
-//         ],
-//       ),
-//     );
-//   }
-// }
