@@ -8,6 +8,7 @@ abstract class MemosRepository {
   Stream<Memo?> watchMemo(MemoID id);
 }
 
+// SOON: Implement the real MemosRepository
 class FakeMemosRepository implements MemosRepository {
   static List<Memo> fakeMemos = [
     Memo(id: "0", title: "Call dentist"),

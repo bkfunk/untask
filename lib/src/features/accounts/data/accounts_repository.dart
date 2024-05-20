@@ -7,7 +7,7 @@ part 'accounts_repository.g.dart';
 
 abstract class AccountsRepository {
   Future<Account?> getAccount(AccountID id);
-  // TODO: Change the return type once accounts might not exist
+  // LATER: Change the return type once accounts might not exist
   Future<Account> createAccount(AccountID id);
 }
 

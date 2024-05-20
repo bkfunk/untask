@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// TODO: Add ChoiceChipSection with a divider and optional headline
+// LATER: Add ChoiceChipSection with a divider and optional headline
 // part 'choice_chip_set.g.dart';
 
 // @riverpod

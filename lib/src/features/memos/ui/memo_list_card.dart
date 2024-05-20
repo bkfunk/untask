@@ -10,6 +10,7 @@ class MemoListCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // NOW: Add a checkbox to mark the memo as done
     return ListTile(
         title: Text(memo.title),
         subtitle: Text(memo.toString()),

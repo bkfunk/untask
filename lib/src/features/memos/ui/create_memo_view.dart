@@ -16,6 +16,7 @@ class CreateMemoView extends ConsumerWidget {
         padding: const EdgeInsets.all(8.0),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          // NOW: Make the Create and Triage Later buttons work
           FloatingActionButton.extended(
               heroTag: null, onPressed: () {}, label: Text("Create".hardcoded)),
           FloatingActionButton.extended(

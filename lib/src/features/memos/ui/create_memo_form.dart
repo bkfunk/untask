@@ -51,6 +51,7 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
   }
 
   Future<void> _submit() async {
+    // NOW: When a create memo form is submitted, it should create the memo in the repository
     setState(() {});
     _formKey.currentState?.save();
     final controller = ref.read(createMemoFormControllerProvider.notifier);
