@@ -45,8 +45,6 @@ class _SystemHash {
   }
 }
 
-typedef AccountRef = AutoDisposeFutureProviderRef<Account?>;
-
 /// See also [account].
 @ProviderFor(account)
 const accountProvider = AccountFamily();
@@ -93,10 +91,10 @@ class AccountFamily extends Family<AsyncValue<Account?>> {
 class AccountProvider extends AutoDisposeFutureProvider<Account?> {
   /// See also [account].
   AccountProvider(
-    this.id,
-  ) : super.internal(
+    String id,
+  ) : this._internal(
           (ref) => account(
-            ref,
+            ref as AccountRef,
             id,
           ),
           from: accountProvider,
@@ -107,9 +105,43 @@ class AccountProvider extends AutoDisposeFutureProvider<Account?> {
                   : _$accountHash,
           dependencies: AccountFamily._dependencies,
           allTransitiveDependencies: AccountFamily._allTransitiveDependencies,
+          id: id,
         );
 
+  AccountProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.id,
+  }) : super.internal();
+
   final String id;
+
+  @override
+  Override overrideWith(
+    FutureOr<Account?> Function(AccountRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: AccountProvider._internal(
+        (ref) => create(ref as AccountRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        id: id,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Account?> createElement() {
+    return _AccountProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -124,4 +156,18 @@ class AccountProvider extends AutoDisposeFutureProvider<Account?> {
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin AccountRef on AutoDisposeFutureProviderRef<Account?> {
+  /// The parameter `id` of this provider.
+  String get id;
+}
+
+class _AccountProviderElement extends AutoDisposeFutureProviderElement<Account?>
+    with AccountRef {
+  _AccountProviderElement(super.provider);
+
+  @override
+  String get id => (origin as AccountProvider).id;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

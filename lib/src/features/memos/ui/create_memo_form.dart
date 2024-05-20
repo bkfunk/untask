@@ -17,12 +17,7 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(createMemoFormControllerProvider);
-    // final currentAccount = ref.watch(currentAccountProvider);
-    // debugPrint("Current Account: ${currentAccount.value?.toString()}");
-    // final List<MotivationID> motivationIDs = currentAccount.when(
-    // data: (data) => data?.prefs['motivationIDs'],
-    // loading: () => [],
-    // error: (e, st) => []);
+
     final motivations = ref.watch(motivationsListProvider);
     debugPrint("Motivations: ${motivations.toString()}");
     return Form(
@@ -48,14 +43,6 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
               loading: () => const Text('loading'),
               error: (error, stackTrace) => const Text('Error'),
             ),
-            // ChoiceChipSet(
-            //   choices: motivationIDs
-            //       .map(
-            //         (el) => (label: el, value: el),
-            //       )
-            //       .toList(),
-            // ),
-            // choices: [(label: "1", value: 1), (label: "2", value: 2)]),
             ElevatedButton(onPressed: _submit, child: const Text('Submit'))
           ],
         ),

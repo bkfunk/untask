@@ -12,7 +12,7 @@ String _$createMemoFormControllerHash() =>
 /// See also [CreateMemoFormController].
 @ProviderFor(CreateMemoFormController)
 final createMemoFormControllerProvider = AutoDisposeAsyncNotifierProvider<
-    CreateMemoFormController, dynamic>.internal(
+    CreateMemoFormController, Object?>.internal(
   CreateMemoFormController.new,
   name: r'createMemoFormControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,5 +22,6 @@ final createMemoFormControllerProvider = AutoDisposeAsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$CreateMemoFormController = AutoDisposeAsyncNotifier<dynamic>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+typedef _$CreateMemoFormController = AutoDisposeAsyncNotifier<Object?>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
