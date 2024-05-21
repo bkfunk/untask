@@ -14,8 +14,8 @@ abstract class MotivationsRepository {
 // SOON: Implement the real MotivationsRepository
 class FakeMotivationsRepository implements MotivationsRepository {
   static List<Motivation> fakeMotivations = [
-    Motivation('0', "Help my family"),
-    Motivation('1', "Tend to my health"),
+    Motivation(id: '0', description: "Help my family"),
+    Motivation(id: '1', description: "Tend to my health"),
   ];
 
   @override
