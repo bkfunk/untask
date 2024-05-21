@@ -11,6 +11,7 @@ class CreateMemoForm extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _CreateMemoFormState();
 }
 
+// IDEA: We should use the same form to both display and edit a memo?
 class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
   final _formKey = GlobalKey<FormState>();
 
@@ -43,6 +44,7 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
               loading: () => const Text('loading'),
               error: (error, stackTrace) => const Text('Error'),
             ),
+            // LATER: Add a "+" button to add more motivations
             ElevatedButton(onPressed: _submit, child: const Text('Submit'))
           ],
         ),

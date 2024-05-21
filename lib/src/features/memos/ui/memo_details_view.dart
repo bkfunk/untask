@@ -21,6 +21,14 @@ class MemoDetailsView extends StatelessWidget {
                     : Center(
                         child: Column(children: [
                         Text(memo.title),
+                        Checkbox(
+                            value: memo.isReleased,
+                            onChanged: (value) {
+                              // ref.read(memosRepositoryProvider).updateMemo(
+                              //     memo.copyWith(isReleased: value));
+                              // NOW: Implement this onchanged to update the memo
+                              print("Update memo to $value");
+                            }),
                         Text(memo.isReleased.toString())
                       ])),
                 error: (Object error, StackTrace stackTrace) {

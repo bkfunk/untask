@@ -10,22 +10,27 @@ class MemosList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final triesList = ref.watch(memosListStreamProvider);
-    return triesList.when(
-      data: (memos) => memos.isEmpty
-          ? const Center(child: Text("No products found"))
-          : ListView.separated(
-              separatorBuilder: (context, index) => const Divider(height: 2),
-              restorationId: 'memosListView',
-              itemCount: memos.length,
-              itemBuilder: (_, index) {
-                final memo = memos[index];
-                return MemoListCard(
-                    memo: memo,
-                    onPressed: () => context.pushNamed(AppRoute.memo.name,
-                        pathParameters: {'id': memo.id}));
-              },
-            ),
+    final memosList = ref.watch(memosListStreamProvider);
+    // IDEA: Create a provider that filters the memos to show only the ones that are not released
+    return memosList.when(
+      data: (memos) {
+        final memosToShow = memos.where((memo) => !memo.isReleased).toList();
+        // LATER: We also need to sort the memos here
+        return memosToShow.isEmpty
+            ? const Center(child: Text("All memos are released!"))
+            : ListView.separated(
+                separatorBuilder: (context, index) => const Divider(height: 2),
+                restorationId: 'memosListView',
+                itemCount: memosToShow.length,
+                itemBuilder: (_, index) {
+                  final memo = memosToShow[index];
+                  return MemoListCard(
+                      memo: memo,
+                      onPressed: () => context.pushNamed(AppRoute.memo.name,
+                          pathParameters: {'id': memo.id}));
+                },
+              );
+      },
       error: (error, stackTrace) {
         return Text(error.toString());
       },
