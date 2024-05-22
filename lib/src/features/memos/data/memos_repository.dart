@@ -18,11 +18,12 @@ class FakeMemosRepository implements MemosRepository {
 
   FakeMemosRepository()
       : fakeMemos = [
-          Memo(id: "0", title: "Call dentist"),
-          Memo(id: "1", title: "Build app"),
-          Memo(id: "2", title: "Buy more medicine"),
-          Memo(id: "3", title: "Drink water", isTriaged: true),
-          Memo(id: "4", title: "Bring in dry cleaning", isReleased: true),
+          const Memo(id: "0", title: "Call dentist"),
+          const Memo(id: "1", title: "Build app"),
+          const Memo(id: "2", title: "Buy more medicine"),
+          const Memo(id: "3", title: "Drink water"), //, isTriaged: true),
+          const Memo(
+              id: "4", title: "Bring in dry cleaning"), // isReleased: true),
         ];
 
   @override
@@ -50,8 +51,8 @@ class FakeMemosRepository implements MemosRepository {
 
   @override
   Memo createMemo(Memo memo) {
-    new_id = fakeMemos.length.toString();
-    Memo newMemo = memo.copyWith(id: new_id);
+    String newId = fakeMemos.length.toString();
+    Memo newMemo = memo.copyWith(id: newId);
     fakeMemos.add(newMemo);
     return newMemo;
   }

@@ -15,12 +15,12 @@ class AsyncValueWidget<T> extends StatelessWidget {
 
   // TODO: Figure out if these static methods as defaults is the best way to do this
   const AsyncValueWidget({
-    Key? key,
+    super.key,
     required this.asyncValue,
     required this.dataLoadedBuilder,
     this.errorThrownBuilder = AsyncValueWidget._defaultErrorThrownBuilder,
     this.loadingBuilder = AsyncValueWidget._defaultLoadingBuilder,
-  }) : super(key: key);
+  });
 
   final AsyncValue<T> asyncValue;
   final Widget Function(T) dataLoadedBuilder;

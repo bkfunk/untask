@@ -14,7 +14,8 @@ class MemosList extends ConsumerWidget {
     // IDEA: Create a provider that filters the memos to show only the ones that are not released
     return memosList.when(
       data: (memos) {
-        final memosToShow = memos.where((memo) => !memo.isReleased).toList();
+        final memosToShow =
+            memos; //.where((memo) => !memo.isReleased).toList();
         // LATER: We also need to sort the memos here
         return memosToShow.isEmpty
             ? const Center(child: Text("All memos are released!"))
