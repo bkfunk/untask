@@ -1,39 +1,77 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nanoid/nanoid.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/memo.dart';
 
-abstract class MemosRepository {
-  Memo? getMemo(MemoID id);
-  createMemo(Memo memo);
-  updateMemo(Memo memo);
-  deleteMemo(MemoID id);
+part 'memos_repository.g.dart';
 
+abstract class MemosRepository {
+  Future<Memo?> getMemo(MemoID id);
+  Future<void> createMemo(Memo memo);
+  Future<void> updateMemo(Memo memo);
+  Future<void> deleteMemo(MemoID id);
+
+  Stream<Memo> watchMemos();
   Stream<List<Memo>> watchMemosList();
   Stream<Memo?> watchMemo(MemoID id);
+
+  Future<List<Memo>> fetchMemos();
+  Future<Memo?> fetchMemo(MemoID id);
 }
 
 // SOON: Implement the real MemosRepository
-class FakeMemosRepository implements MemosRepository {
-  final List<Memo> fakeMemos;
-
-  FakeMemosRepository()
-      : fakeMemos = [
-          const Memo(id: "0", title: "Call dentist"),
-          const Memo(id: "1", title: "Build app"),
-          const Memo(id: "2", title: "Buy more medicine"),
-          const Memo(id: "3", title: "Drink water"), //, isTriaged: true),
-          const Memo(
-              id: "4", title: "Bring in dry cleaning"), // isReleased: true),
-        ];
+@riverpod
+class FakeMemosRepository extends _$FakeMemosRepository
+    implements MemosRepository {
+  @override
+  Future<List<Memo>> build() async {
+    return Future.value([
+      Memo(title: "Call dentist"),
+      Memo(title: "Build app"),
+      Memo(title: "Buy more medicine"),
+      Memo(title: "Drink water"),
+      Memo(title: "Bring in dry cleaning"),
+    ]);
+  }
 
   @override
-  Memo? getMemo(MemoID id) {
-    return _getMemo(fakeMemos, id);
+  Future<void> createMemo(Memo memo) async {
+    final previousState = await future;
+    state = AsyncData([...previousState, memo]);
+  }
+
+  @override
+  Future<void> deleteMemo(MemoID id) async {
+    final previousState = await future;
+    state = AsyncData(previousState.where((memo) => memo.id != id).toList());
+  }
+
+  @override
+  Future<void> updateMemo(Memo memo) async {
+    final previousState = await future;
+    state = AsyncData([
+      for (final m in previousState)
+        if (m.id == memo.id) memo else m,
+    ]);
+  }
+
+  @override
+  Future<Memo?> getMemo(MemoID id) async {
+    return _getMemo(await future, id);
+  }
+
+  @override
+  Stream<Memo> watchMemos() async* {
+    List<Memo> memos = await future;
+    for (Memo memo in memos) {
+      yield memo;
+    }
   }
 
   @override
   Stream<List<Memo>> watchMemosList() async* {
-    yield fakeMemos;
+    yield state.asData!.value;
   }
 
   @override
@@ -50,35 +88,46 @@ class FakeMemosRepository implements MemosRepository {
   }
 
   @override
-  Memo createMemo(Memo memo) {
-    String newId = fakeMemos.length.toString();
-    Memo newMemo = memo.copyWith(id: newId);
-    fakeMemos.add(newMemo);
-    return newMemo;
+  Future<List<Memo>> fetchMemos() {
+    return future;
   }
 
   @override
-  deleteMemo(MemoID id) {
-    fakeMemos.removeWhere((memo) => memo.id == id);
-  }
-
-  @override
-  updateMemo(Memo memo) {
-    fakeMemos[fakeMemos.indexWhere((memo) => memo.id == memo.id)] = memo;
+  Future<Memo?> fetchMemo(MemoID id) {
+    return fetchMemos().then((memos) => _getMemo(memos, id));
   }
 }
 
-final memosRepositoryProvider = Provider<MemosRepository>((ref) {
+@riverpod
+FakeMemosRepository memosRepository(MemosRepositoryRef ref) {
   return FakeMemosRepository();
-});
+}
 
-final memosListStreamProvider = StreamProvider.autoDispose<List<Memo>>((ref) {
-  final memosRepository = ref.watch(memosRepositoryProvider);
-  return memosRepository.watchMemosList();
-});
+@riverpod
+Stream<Memo> allMemos(AllMemosRef ref) {
+  // SOON: Add filtering and sorting
+  return ref.watch(memosRepositoryProvider).watchMemos();
+}
 
-final memoProvider =
-    StreamProvider.autoDispose.family<Memo?, MemoID>((ref, id) {
-  final memosRepository = ref.watch(memosRepositoryProvider);
-  return memosRepository.watchMemo(id);
-});
+@riverpod
+Future<List<Memo>> fetchMemosList(FetchMemosListRef ref) {
+  return ref.watch(memosRepositoryProvider).fetchMemos();
+}
+// AsyncValue<List<Memo>> memosListStream(MemosRepositoryRef ref) {
+//   return ref.watch(memosRepositoryProvider).watchMemosList().asAsyncValue();
+// }
+
+// final memosRepositoryProvider = Provider<MemosRepository>((ref) {
+//   return FakeMemosRepository();
+// });
+
+// final memosListStreamProvider = StreamProvider.autoDispose<List<Memo>>((ref) {
+//   final memosRepository = ref.watch(memosRepositoryProvider);
+//   return memosRepository.watchMemosList();
+// });
+
+// final memoProvider =
+//     StreamProvider.autoDispose.family<Memo?, MemoID>((ref, id) {
+//   final memosRepository = ref.watch(memosRepositoryProvider);
+//   return memosRepository.watchMemo(id);
+// });
