@@ -36,20 +36,8 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
                 FormBuilderValidators.minLength(3),
               ]),
             ),
-            // const Text('I can do this in...'),
-            // motivations.when(
-            //   data: (motivs) {
-            //     debugPrint("Motivations: ${motivs.toString()}");
-            //     return ChoiceChipSet(
-            //         choices: motivs
-            //             .map((e) => (label: e.description, value: e.id))
-            //             .toList());
-            //   },
-            //   loading: () => const Text('loading'),
-            //   error: (error, stackTrace) => const Text('Error'),
-            // ),
+            // LATER: Add motivations
             // LATER: Add a "+" button to add more motivations
-            const Spacer(),
             ElevatedButton(onPressed: _submit, child: const Text('Submit')),
           ],
         ),
@@ -60,25 +48,19 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
   Future<void> _submit() async {
     // Validate and save the form values
     if (_formKey.currentState?.saveAndValidate() ?? false) {
-      debugPrint("Valid: ${_formKey.currentState?.value.toString()}");
-      ref.read(memosRepositoryProvider).createMemo(
-            Memo(title: _formKey.currentState!.value['Memo Name'] as String),
-          );
+      // Valid data, so save the memo to the repository
+      // ref
+      //     .read(memosRepositoryProvider)
+      //     .createMemo(
+      //       // The repository will handle creating an ID and createdAt timestamp
+      //       Memo(title: _formKey.currentState!.value['Memo Name'] as String),
+      //     )
+      //     .then((_) {
+      //   debugPrint("Valid: ${value.toString()}");
+      Navigator.of(context).pop();
+      // })
     } else {
       debugPrint("Invalid: ${_formKey.currentState?.value.toString()}");
     }
-    Navigator.of(context).pop();
-
-    // On another side, can access all field values without saving form with instantValues
-    // _formKey.currentState?.validate();
-    // debugPrint(_formKey.currentState?.instantValue.toString());
-    //   // NOW: When a create memo form is submitted, it should create the memo in the repository
-    //   setState(() {});
-    //   _formKey.currentState?.save();
-    //   final controller = ref.read(createMemoFormControllerProvider.notifier);
-    //   final success = await controller.submit();
-    //   final value = _formKey.currentState.toString();
-    //   debugPrint("Success: $value $success");
-    //   // TODO add params to submit
   }
 }

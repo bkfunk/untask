@@ -15,28 +15,21 @@ class MemosListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // me
-    // List<Memo> memosList = ref.watch(memosProvider).when(
-    //       data: (data) => ,
-    //       error: (Object e, StackTrace st) => ErrorMessageModal(e, st),
-    //       loading: () => const CircularProgressIndicator(),
-    //     );
-    // NOW: Look at the way Andrea returns streams/futures from repositories
-    AsyncValue memos = ref.watch(fetchMemosListProvider);
+    AsyncValue memosAsync = ref.watch(memosStreamProvider);
 
     return Scaffold(
-      body: memos.when(
-        data: (data) => ListView.builder(
+      body: memosAsync.when(
+        data: (memos) => ListView.builder(
+          itemCount: memos.length,
           itemBuilder: (context, index) {
             return MemoListCard(
-              memo: data[index],
+              memo: memos[index],
               onPressed: () => context.pushNamed(
                 AppRoute.memo.name,
-                pathParameters: {'id': data[index].id},
+                pathParameters: {'id': memos[index].id},
               ),
             );
           },
-          itemCount: data.length,
         ),
         loading: () => const CircularProgressIndicator(),
         error: (Object e, StackTrace st) => ErrorMessageModal(e, st),
