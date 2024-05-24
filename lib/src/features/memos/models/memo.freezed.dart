@@ -21,6 +21,7 @@ Memo _$MemoFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Memo {
   String get id => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -33,7 +34,7 @@ abstract class $MemoCopyWith<$Res> {
   factory $MemoCopyWith(Memo value, $Res Function(Memo) then) =
       _$MemoCopyWithImpl<$Res, Memo>;
   @useResult
-  $Res call({String id, String title});
+  $Res call({String id, DateTime createdAt, String title});
 }
 
 /// @nodoc
@@ -50,6 +51,7 @@ class _$MemoCopyWithImpl<$Res, $Val extends Memo>
   @override
   $Res call({
     Object? id = null,
+    Object? createdAt = null,
     Object? title = null,
   }) {
     return _then(_value.copyWith(
@@ -57,6 +59,10 @@ class _$MemoCopyWithImpl<$Res, $Val extends Memo>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -72,7 +78,7 @@ abstract class _$$MemoImplCopyWith<$Res> implements $MemoCopyWith<$Res> {
       __$$MemoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String title});
+  $Res call({String id, DateTime createdAt, String title});
 }
 
 /// @nodoc
@@ -86,6 +92,7 @@ class __$$MemoImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? createdAt = null,
     Object? title = null,
   }) {
     return _then(_$MemoImpl(
@@ -93,6 +100,10 @@ class __$$MemoImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -104,7 +115,8 @@ class __$$MemoImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$MemoImpl with DiagnosticableTreeMixin implements _Memo {
-  const _$MemoImpl({required this.id, required this.title});
+  const _$MemoImpl(
+      {required this.id, required this.createdAt, required this.title});
 
   factory _$MemoImpl.fromJson(Map<String, dynamic> json) =>
       _$$MemoImplFromJson(json);
@@ -112,19 +124,22 @@ class _$MemoImpl with DiagnosticableTreeMixin implements _Memo {
   @override
   final String id;
   @override
+  final DateTime createdAt;
+  @override
   final String title;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Memo(id: $id, title: $title)';
+    return 'Memo._(id: $id, createdAt: $createdAt, title: $title)';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('type', 'Memo'))
+      ..add(DiagnosticsProperty('type', 'Memo._'))
       ..add(DiagnosticsProperty('id', id))
+      ..add(DiagnosticsProperty('createdAt', createdAt))
       ..add(DiagnosticsProperty('title', title));
   }
 
@@ -134,12 +149,14 @@ class _$MemoImpl with DiagnosticableTreeMixin implements _Memo {
         (other.runtimeType == runtimeType &&
             other is _$MemoImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.title, title) || other.title == title));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title);
+  int get hashCode => Object.hash(runtimeType, id, createdAt, title);
 
   @JsonKey(ignore: true)
   @override
@@ -156,13 +173,17 @@ class _$MemoImpl with DiagnosticableTreeMixin implements _Memo {
 }
 
 abstract class _Memo implements Memo {
-  const factory _Memo({required final String id, required final String title}) =
-      _$MemoImpl;
+  const factory _Memo(
+      {required final String id,
+      required final DateTime createdAt,
+      required final String title}) = _$MemoImpl;
 
   factory _Memo.fromJson(Map<String, dynamic> json) = _$MemoImpl.fromJson;
 
   @override
   String get id;
+  @override
+  DateTime get createdAt;
   @override
   String get title;
   @override
