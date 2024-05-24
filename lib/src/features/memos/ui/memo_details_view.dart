@@ -1,38 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:untask/src/features/memos/data/memos_repository.dart';
 
-class MemoDetailsView extends StatelessWidget {
+import '../models/memo.dart';
+
+class MemoDetailsView extends ConsumerWidget {
   const MemoDetailsView({super.key, required this.memoID});
 
-  final String memoID;
+  // MemoDetailsView(required this.memoID});
+
+  final MemoID memoID;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // MemoID memoID = "foo";
+    // final memoAsync = ref.read(memosRepositoryProvider).watchMemo(memoID);
+    final memoAsync = ref.watch(memoFutureProvider(memoID));
+
     return Scaffold(
-        appBar: AppBar(),
-        body: Consumer(
-          builder: (context, ref, child) {
-            return const Center(
-              child: Text("Test"),
-            );
-            // final memo = ref.watch(memoProvider(memoID));
-            // return memo.when(
-            //     data: (memo) => memo == null
-            //         ? const Center(child: Text('Memo not found'))
-            //         : Center(
-            //             child: Column(children: [
-            //             Text(memo.title),
-            //           ])),
-            //     error: (Object error, StackTrace stackTrace) {
-            //       return Center(
-            //         child: Text('Error: $error'),
-            //       );
-            //     },
-            //     loading: () {
-            //       return const Center(child: CircularProgressIndicator());
-            //     });
-          },
-        ));
+      appBar: AppBar(),
+      body: Consumer(
+        builder: (context, ref, child) {
+          return Center(
+            child: memoAsync.when(
+              data: (memo) => memo == null
+                  ? const Text('Memo not found')
+                  : Column(
+                      children: [
+                        Text(memo.title),
+                      ],
+                    ),
+              error: (Object error, StackTrace stackTrace) {
+                return Text('Error: $error');
+              },
+              loading: () {
+                return const CircularProgressIndicator();
+              },
+            ), // when
+          );
+        },
+      ),
+    );
   }
 }

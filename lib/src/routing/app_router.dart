@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untask/src/features/memos/ui/create_memo_view.dart';
@@ -23,16 +24,17 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const MemosListView(),
       ),
       GoRoute(
-          path: '/memo/:id',
-          name: AppRoute.memo.name,
-          builder: (context, state) => MemoDetailsView(
-                memoID: state.pathParameters['id']!,
-              )),
+        path: '/memo/:id',
+        name: AppRoute.memo.name,
+        builder: (context, state) => MemoDetailsView(
+          memoID: state.pathParameters['id']!,
+        ),
+      ),
       GoRoute(
         path: '/create',
         name: AppRoute.create.name,
         builder: (context, state) => const CreateMemoView(),
-      )
+      ),
     ],
     // TODO: Add error screen
   );

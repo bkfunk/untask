@@ -126,3 +126,8 @@ MemosRepository memosRepository(MemosRepositoryRef ref) {
 Stream<List<Memo>> memosStream(MemosStreamRef ref) {
   return ref.watch(memosRepositoryProvider).watchMemosList();
 }
+
+@riverpod
+Future<Memo?> memoFuture(MemoFutureRef ref, MemoID id) {
+  return ref.watch(memosRepositoryProvider).getMemo(id);
+}
