@@ -1,13 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nanoid/nanoid.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/memo.dart';
-
-part 'memos_repository.g.dart';
 
 abstract class MemosRepository {
   Future<Memo?> getMemo(MemoID id);
@@ -151,65 +147,3 @@ class FakeMemosRepository extends MemosRepository {
     return fakeMemos;
   }
 }
-
-@riverpod
-class MemosList extends _$MemosList {
-  final StreamController _controller = StreamController<List<Memo>>.broadcast();
-
-  final List<Memo> _memos = [Memo(title: "Foo"), Memo(title: "Call dentist")];
-
-  @override
-  Stream<List<Memo>> build() {
-    state = AsyncData(_memos);
-    _controller.add(_memos);
-    return _controller.stream as Stream<List<Memo>>;
-
-    // return Stream.fromIterable([memos]);
-    //     for (memo in [Memo(title: "Call dentist")]) {
-    //   _cotroller
-    // }
-  }
-
-  void addMemo(Memo memo) {
-    _memos.add(memo);
-    _controller.add(_memos);
-  }
-}
-// MemosRepository memosRepository(MemosRepositoryRef ref) {
-//   return FakeMemosRepository();
-// }
-
-// @riverpod
-// class MemosRepositoryNotifier extends _$MemosRepositoryNotifier {
-//   @override
-//   build() async {
-//     return FakeMemosRepository();
-//   }
-// }
-
-// @riverpod
-// Stream<List<Memo>> memosStream(MemosStreamRef ref) {
-//   final repo = ref.watch(memosRepositoryProvider);
-//   print("memosStream called ${repo.getMemos().map((e) => e.title).toList()}");
-//   final stream = repo.watchMemosList();
-//   stream.listen((event) {
-//     print("memosStream emitted: $event");
-//   });
-//   return stream;
-//   // return repo.watchMemosList();
-// }
-// @Riverpod(keepAlive: true)
-// @riverpod
-// class MemosStream extends _$MemosStream {
-//   @override
-//   Stream<List<Memo>> build() {
-//     return ref.watch(memosRepositoryNotifierProvider.);
-//   }
-
-//   // Add methods to mutate the state
-// }
-
-// @riverpod
-// Future<Memo?> memoFuture(MemoFutureRef ref, MemoID id) {
-//   return ref.watch(memosRepositoryProvider).getMemo(id);
-// }

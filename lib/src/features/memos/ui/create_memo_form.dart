@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:untask/src/common/ui/choice_chip_set.dart';
-import 'package:untask/src/features/memos/data/memos_repository.dart';
-import 'package:untask/src/features/motivations/data/motivations_repository.dart';
 
-import '../models/memo.dart';
-
-class CreateMemoForm extends ConsumerStatefulWidget {
+class CreateMemoForm extends StatefulWidget {
   const CreateMemoForm({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CreateMemoFormState();
+  State<StatefulWidget> createState() => _CreateMemoFormState();
 }
 
 // IDEA: We should use the same form to both display and edit a memo?
-class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
+class _CreateMemoFormState extends State<CreateMemoForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -48,19 +42,7 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
   Future<void> _submit() async {
     // Validate and save the form values
     if (_formKey.currentState?.saveAndValidate() ?? false) {
-      ref.read(memosListProvider.notifier).addMemo(
-            Memo(title: _formKey.currentState!.value['Memo Name'] as String),
-          );
-      // Valid data, so save the memo to the repository
-
-      // ref
-      //     .read(memosRepositoryProvider)
-      //     .createMemo(
-      //       // The repository will handle creating an ID and createdAt timestamp
-      //       Memo(title: _formKey.currentState!.value['Memo Name'] as String),
-      //     )
-      //     .then((value) {
-      //   debugPrint("Valid: ${value.toString()}");
+      // NOW: Save the memo to the repository
       Navigator.of(context).pop();
     } else {
       debugPrint("Invalid: ${_formKey.currentState?.value.toString()}");

@@ -1,12 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // LATER: Add ChoiceChipSection with a divider and optional headline
 // part 'choice_chip_set.g.dart';
 
 // @riverpod
-class ChoiceChipSet extends ConsumerStatefulWidget {
+class ChoiceChipSet extends StatefulWidget {
   final double spacing;
   final List<ChoiceChipValue> choices;
 
@@ -17,11 +16,11 @@ class ChoiceChipSet extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ChoiceChipSet> createState() => _ChoiceChipSetState();
+  State<ChoiceChipSet> createState() => _ChoiceChipSetState();
 }
 
 // @riverpod
-class _ChoiceChipSetState extends ConsumerState<ChoiceChipSet> {
+class _ChoiceChipSetState extends State<ChoiceChipSet> {
   ChoiceChipValue? selectedChoice;
 
   @override
@@ -37,11 +36,13 @@ class _ChoiceChipSetState extends ConsumerState<ChoiceChipSet> {
               label: Text(choice.label),
               selected: selectedChoice == choice,
               onSelected: (isSelected) {
-                setState(() => isSelected
-                    ? selectedChoice = choice
-                    : selectedChoice = null);
+                setState(
+                  () => isSelected
+                      ? selectedChoice = choice
+                      : selectedChoice = null,
+                );
               },
-            )
+            ),
         ],
       ),
     );
