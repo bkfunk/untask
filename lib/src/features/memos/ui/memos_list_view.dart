@@ -15,25 +15,70 @@ class MemosListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue memosAsync = ref.watch(memosStreamProvider);
+    // List<Memo> memos = ref.watch(memosStreamProvider).value ?? [];
+    // AsyncValue<List<Memo>> memosAsync = ref.watch(memosStreamProvider);
+
+    // // print("Building MemosListView with memosAsync: $memosAsync");
+    // final repo = ref.watch(memosRepositoryProvider);
+    // final stream = repo.watchMemosList();
+    // stream.listen((event) {
+    //   print("MemosListView: $event");
+    // });
+    // print(
+    //   "Building MemosListView with stream: $stream ~ ${stream.isEmpty} ~ ${stream.length}",
+    // );
+    AsyncValue<List<Memo>> memosAsync = ref.watch(memosListProvider);
 
     return Scaffold(
+      // body: memos.isEmpty
+      //     ? const Center(
+      //         child: Text("No memos yet!"),
+      //       )
+      //     : ListView.builder(
+      //         itemCount: memos.length,
+      //         itemBuilder: (context, index) {
+      //           print("Building memo card for index $index");
+      //           return MemoListCard(
+      //             memo: memos[index],
+      //             onPressed: () => context.pushNamed(
+      //               AppRoute.memo.name,
+      //               pathParameters: {'id': memos[index].id},
+      //             ),
+      //           );
+      //         },
+      //       ),
       body: memosAsync.when(
-        data: (memos) => ListView.builder(
-          itemCount: memos.length,
-          itemBuilder: (context, index) {
-            return MemoListCard(
-              memo: memos[index],
-              onPressed: () => context.pushNamed(
-                AppRoute.memo.name,
-                pathParameters: {'id': memos[index].id},
-              ),
+        data: (memos) {
+          if (memos.isEmpty) {
+            return const Center(
+              child: Text("No memos yet!"),
             );
-          },
-        ),
-        loading: () => const CircularProgressIndicator(),
-        error: (Object e, StackTrace st) => ErrorMessageModal(e, st),
+          }
+          debugPrint("Building list for memos: $memos");
+          return ListView.builder(
+            itemCount: memos.length,
+            itemBuilder: (context, index) {
+              print("Building memo card for index $index");
+              return MemoListCard(
+                memo: memos[index],
+                onPressed: () => context.pushNamed(
+                  AppRoute.memo.name,
+                  pathParameters: {'id': memos[index].id},
+                ),
+              );
+            },
+          );
+        },
+        loading: () {
+          print("Building loading indicator for memosAsync: $memosAsync");
+          return const CircularProgressIndicator();
+        },
+        error: (Object e, StackTrace st) {
+          print("Error: $e, $st");
+          return ErrorMessageModal(e, st);
+        },
       ),
+
       bottomNavigationBar: const MemosListNavbar(),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),

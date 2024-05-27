@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -31,8 +34,10 @@ abstract class MemosRepository {
   Future<void> deleteMemo(MemoID id);
 
   Stream<List<Memo>> watchMemosList();
-  Stream<Memo> watchMemos();
+  Stream<List<Memo>> watchMemos();
   Stream<Memo?> watchMemo(MemoID id);
+
+  List<Memo> getMemos();
 }
 
 /// Mixin to add a [createMemo] method to an implementation of [MemosRepository].
@@ -54,19 +59,32 @@ abstract class MemosRepository {
 // SOON: Implement the real MemosRepository
 class FakeMemosRepository extends MemosRepository {
   final int _delay = 1;
+  final _memosController = StreamController<List<Memo>>.broadcast(
+    onListen: () {
+      print("Fake memos stream listener added");
+    },
+    onCancel: () {
+      print("Fake memos stream listener removed");
+    },
+  );
   final List<Memo> fakeMemos;
 
-  FakeMemosRepository()
-      : fakeMemos = [
-          Memo(id: "0", title: "Call dentist"),
-          Memo(id: "1", title: "Build app"),
-          Memo(id: "2", title: "Buy more medicine"),
-          Memo(id: "3", title: "Drink water"),
-          Memo(
-            id: "4",
-            title: "Bring in dry cleaning",
-          ),
-        ];
+  FakeMemosRepository() : fakeMemos = [] {
+    _memosController.stream.listen((memos) {
+      print("Emitting: Fake memos updated: $memos");
+    });
+    for (var m in [
+      Memo(title: "Call dentist"),
+      Memo(title: "Build app"),
+      Memo(title: "Buy more medicine"),
+      Memo(title: "Drink water"),
+      Memo(title: "Bring in dry cleaning"),
+      Memo(title: "Pick up groceries"),
+    ]) {
+      createMemo(m);
+      _memosController.add(fakeMemos);
+    }
+  }
 
   @override
   Future<Memo?> getMemo(MemoID id) async {
@@ -75,32 +93,44 @@ class FakeMemosRepository extends MemosRepository {
 
   @override
   Future<void> insertMemo(Memo memo) async {
-    await Future.delayed(Duration(seconds: _delay));
+    print('insertMemo called with: $memo');
+    // await Future.delayed(Duration(seconds: _delay));
     fakeMemos.add(memo);
+    _memosController.add(fakeMemos);
   }
 
   @override
   Future<void> updateMemo(Memo memo) async {
-    await Future.delayed(Duration(seconds: _delay));
+    // await Future.delayed(Duration(seconds: _delay));
     fakeMemos[fakeMemos.indexWhere((memo) => memo.id == memo.id)] = memo;
+    _memosController.add(fakeMemos);
   }
 
   @override
   Future<void> deleteMemo(MemoID id) async {
-    await Future.delayed(Duration(seconds: _delay));
+    // await Future.delayed(Duration(seconds: _delay));
     fakeMemos.removeWhere((memo) => memo.id == id);
+    _memosController.add(fakeMemos);
   }
 
   @override
-  Stream<List<Memo>> watchMemosList() async* {
-    await Future.delayed(const Duration(seconds: 1));
-    yield fakeMemos;
+  Stream<List<Memo>> watchMemosList() {
+    debugPrint(
+      'watchMemosList called: ${fakeMemos.map((e) => e.title).toList()}',
+    );
+    debugPrint('isPaused: ${_memosController.isPaused}');
+    debugPrint('isClosed: ${_memosController.isClosed}');
+    if (_memosController.isPaused) {
+      return const Stream.empty();
+    }
+    return _memosController.stream;
   }
 
   @override
-  Stream<Memo> watchMemos() {
-    // TODO: implement watchMemos
-    throw UnimplementedError();
+  Stream<List<Memo>> watchMemos() {
+    return Stream.fromIterable([
+      fakeMemos,
+    ]);
   }
 
   @override
@@ -115,19 +145,71 @@ class FakeMemosRepository extends MemosRepository {
       return null;
     }
   }
+
+  @override
+  List<Memo> getMemos() {
+    return fakeMemos;
+  }
 }
 
 @riverpod
-MemosRepository memosRepository(MemosRepositoryRef ref) {
-  return FakeMemosRepository();
-}
+class MemosList extends _$MemosList {
+  final StreamController _controller = StreamController<List<Memo>>.broadcast();
 
-@riverpod
-Stream<List<Memo>> memosStream(MemosStreamRef ref) {
-  return ref.watch(memosRepositoryProvider).watchMemosList();
-}
+  final List<Memo> _memos = [Memo(title: "Foo"), Memo(title: "Call dentist")];
 
-@riverpod
-Future<Memo?> memoFuture(MemoFutureRef ref, MemoID id) {
-  return ref.watch(memosRepositoryProvider).getMemo(id);
+  @override
+  Stream<List<Memo>> build() {
+    state = AsyncData(_memos);
+    _controller.add(_memos);
+    return _controller.stream as Stream<List<Memo>>;
+
+    // return Stream.fromIterable([memos]);
+    //     for (memo in [Memo(title: "Call dentist")]) {
+    //   _cotroller
+    // }
+  }
+
+  void addMemo(Memo memo) {
+    _memos.add(memo);
+    _controller.add(_memos);
+  }
 }
+// MemosRepository memosRepository(MemosRepositoryRef ref) {
+//   return FakeMemosRepository();
+// }
+
+// @riverpod
+// class MemosRepositoryNotifier extends _$MemosRepositoryNotifier {
+//   @override
+//   build() async {
+//     return FakeMemosRepository();
+//   }
+// }
+
+// @riverpod
+// Stream<List<Memo>> memosStream(MemosStreamRef ref) {
+//   final repo = ref.watch(memosRepositoryProvider);
+//   print("memosStream called ${repo.getMemos().map((e) => e.title).toList()}");
+//   final stream = repo.watchMemosList();
+//   stream.listen((event) {
+//     print("memosStream emitted: $event");
+//   });
+//   return stream;
+//   // return repo.watchMemosList();
+// }
+// @Riverpod(keepAlive: true)
+// @riverpod
+// class MemosStream extends _$MemosStream {
+//   @override
+//   Stream<List<Memo>> build() {
+//     return ref.watch(memosRepositoryNotifierProvider.);
+//   }
+
+//   // Add methods to mutate the state
+// }
+
+// @riverpod
+// Future<Memo?> memoFuture(MemoFutureRef ref, MemoID id) {
+//   return ref.watch(memosRepositoryProvider).getMemo(id);
+// }

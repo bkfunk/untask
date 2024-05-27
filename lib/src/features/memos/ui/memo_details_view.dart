@@ -16,29 +16,29 @@ class MemoDetailsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // MemoID memoID = "foo";
     // final memoAsync = ref.read(memosRepositoryProvider).watchMemo(memoID);
-    final memoAsync = ref.watch(memoFutureProvider(memoID));
+    // final memoAsync = ref.watch(memoFutureProvider(memoID));
 
     return Scaffold(
       appBar: AppBar(),
       body: Consumer(
         builder: (context, ref, child) {
-          return Center(
-            child: memoAsync.when(
-              data: (memo) => memo == null
-                  ? const Text('Memo not found')
-                  : Column(
-                      children: [
-                        Text(memo.title),
-                      ],
-                    ),
-              error: (Object error, StackTrace stackTrace) {
-                return Text('Error: $error');
-              },
-              loading: () {
-                return const CircularProgressIndicator();
-              },
-            ), // when
-          );
+          return const Center(
+              // child: memoAsync.when(
+              //   data: (memo) => memo == null
+              //       ? const Text('Memo not found')
+              //       : Column(
+              //           children: [
+              //             Text(memo.title),
+              //           ],
+              //         ),
+              //   error: (Object error, StackTrace stackTrace) {
+              //     return Text('Error: $error');
+              //   },
+              //   loading: () {
+              //     return const CircularProgressIndicator();
+              //   },
+              // ), // when
+              );
         },
       ),
     );

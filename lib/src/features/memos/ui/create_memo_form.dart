@@ -48,17 +48,20 @@ class _CreateMemoFormState extends ConsumerState<CreateMemoForm> {
   Future<void> _submit() async {
     // Validate and save the form values
     if (_formKey.currentState?.saveAndValidate() ?? false) {
+      ref.read(memosListProvider.notifier).addMemo(
+            Memo(title: _formKey.currentState!.value['Memo Name'] as String),
+          );
       // Valid data, so save the memo to the repository
+
       // ref
       //     .read(memosRepositoryProvider)
       //     .createMemo(
       //       // The repository will handle creating an ID and createdAt timestamp
       //       Memo(title: _formKey.currentState!.value['Memo Name'] as String),
       //     )
-      //     .then((_) {
+      //     .then((value) {
       //   debugPrint("Valid: ${value.toString()}");
       Navigator.of(context).pop();
-      // })
     } else {
       debugPrint("Invalid: ${_formKey.currentState?.value.toString()}");
     }
