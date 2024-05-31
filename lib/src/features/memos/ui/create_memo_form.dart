@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+import "package:flutter/material.dart";
+import "package:flutter_form_builder/flutter_form_builder.dart";
+import "package:form_builder_validators/form_builder_validators.dart";
+
+import "../../../app.dart";
+import "../models/memo.dart";
 
 class CreateMemoForm extends StatefulWidget {
   const CreateMemoForm({super.key});
@@ -22,9 +25,9 @@ class _CreateMemoFormState extends State<CreateMemoForm> {
         child: Column(
           children: <Widget>[
             FormBuilderTextField(
-              name: 'Memo Name',
+              name: "Memo Name",
               autofocus: true,
-              decoration: const InputDecoration(labelText: 'Thing to do'),
+              decoration: const InputDecoration(labelText: "Thing to do"),
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
                 FormBuilderValidators.minLength(3),
@@ -32,7 +35,7 @@ class _CreateMemoFormState extends State<CreateMemoForm> {
             ),
             // LATER: Add motivations
             // LATER: Add a "+" button to add more motivations
-            ElevatedButton(onPressed: _submit, child: const Text('Submit')),
+            ElevatedButton(onPressed: _submit, child: const Text("Submit")),
           ],
         ),
       ),
@@ -43,6 +46,9 @@ class _CreateMemoFormState extends State<CreateMemoForm> {
     // Validate and save the form values
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       // NOW: Save the memo to the repository
+      AppController.of(context).memosRepository.createMemo(
+            Memo(title: _formKey.currentState?.value["Memo Name"] as String),
+          );
       Navigator.of(context).pop();
     } else {
       debugPrint("Invalid: ${_formKey.currentState?.value.toString()}");

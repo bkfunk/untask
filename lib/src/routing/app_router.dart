@@ -1,36 +1,35 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:untask/src/features/memos/ui/create_memo_view.dart';
+import "package:go_router/go_router.dart";
+import "package:untask/src/features/memos/ui/create_memo_view.dart";
 
-import '../features/memos/ui/memo_details_view.dart';
-import '../features/memos/ui/memos_list_view.dart';
+import "../features/memos/ui/memo_details_view.dart";
+import "../features/memos/ui/memos_list_view.dart";
 
 enum AppRoute { home, memo, memos, create }
 
 GoRouter getGoRouter() {
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: "/",
     debugLogDiagnostics: true,
     routes: [
       GoRoute(
-        path: '/',
+        path: "/",
         name: AppRoute.home.name,
         builder: (context, state) => const MemosListView(),
       ),
       GoRoute(
-        path: '/memos',
+        path: "/memos",
         name: AppRoute.memos.name,
         builder: (context, state) => const MemosListView(),
       ),
       GoRoute(
-        path: '/memo/:id',
+        path: "/memo/:id",
         name: AppRoute.memo.name,
         builder: (context, state) => MemoDetailsView(
-          memoID: state.pathParameters['id']!,
+          memoID: state.pathParameters["id"]!,
         ),
       ),
       GoRoute(
-        path: '/create',
+        path: "/create",
         name: AppRoute.create.name,
         builder: (context, state) => const CreateMemoView(),
       ),

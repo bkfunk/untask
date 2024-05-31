@@ -1,16 +1,17 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter/foundation.dart';
-import 'package:nanoid/nanoid.dart';
+import "package:freezed_annotation/freezed_annotation.dart";
+import "package:flutter/foundation.dart";
+import "package:nanoid/nanoid.dart";
+import "package:repository/data_items/data_item.dart";
 
 // import '../../motivations/models/motivation.dart';
 
-part 'memo.freezed.dart';
-part 'memo.g.dart';
+part "memo.freezed.dart";
+part "memo.g.dart";
 
 typedef MemoID = String;
 
 @freezed
-class Memo with _$Memo {
+class Memo with _$Memo implements DataItem<MemoID> {
   // Private constructor for @freezed, requiring all fields to be passed
   const factory Memo._({
     required MemoID id,

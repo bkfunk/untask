@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class MemosListNavbar extends StatelessWidget {
   const MemosListNavbar({super.key});
@@ -7,10 +7,10 @@ class MemosListNavbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
+        BottomNavigationBarItem(icon: Icon(Icons.list), label: "List"),
         BottomNavigationBarItem(
           icon: Icon(Icons.calendar_today),
-          label: 'Today',
+          label: "Today",
         ),
       ],
     );

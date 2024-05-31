@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:untask/src/features/memos/models/memo.dart';
+import "package:flutter/material.dart";
+import "package:untask/src/features/memos/models/memo.dart";
 
 class MemoListCard extends StatelessWidget {
   final Memo memo;

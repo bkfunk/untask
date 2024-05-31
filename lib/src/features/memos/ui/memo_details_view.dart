@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:untask/src/features/memos/data/memos_repository.dart';
+import "package:flutter/material.dart";
 
-import '../models/memo.dart';
+import "../models/memo.dart";
 
 class MemoDetailsView extends StatelessWidget {
   const MemoDetailsView({super.key, required this.memoID});

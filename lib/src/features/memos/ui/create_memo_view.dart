@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:untask/src/features/memos/ui/create_memo_form.dart';
-import 'package:untask/src/localization/string_hardcoded.dart';
+import "package:flutter/material.dart";
+import "package:untask/src/features/memos/ui/create_memo_form.dart";
+import "package:untask/src/localization/string_hardcoded.dart";
 
 class CreateMemoView extends StatelessWidget {
   const CreateMemoView({super.key});
@@ -8,7 +8,7 @@ class CreateMemoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Title')),
+      appBar: AppBar(title: const Text("Title")),
       body: const CreateMemoForm(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(

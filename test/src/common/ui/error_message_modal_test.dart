@@ -1,29 +1,29 @@
-import 'dart:async';
+import "dart:async";
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:untask/src/common/ui/error_message_modal.dart';
+import "package:flutter_test/flutter_test.dart";
+import "package:untask/src/common/ui/error_message_modal.dart";
 
 void main() {
-  test('Error message modal sets error message correctly', () {
+  test("Error message modal sets error message correctly", () {
     expect(
         ErrorMessageModal(
-                TimeoutException('Timeout'), StackTrace.fromString(''))
+                TimeoutException("Timeout"), StackTrace.fromString(""),)
             .errorMessage,
-        'TimeoutException: Timeout');
+        "TimeoutException: Timeout",);
     expect(
         ErrorMessageModal(
-          TimeoutException('Timeout'),
-          StackTrace.fromString(''),
-          messageBuilder: (e) => 'Foo: ${e.toString()}',
+          TimeoutException("Timeout"),
+          StackTrace.fromString(""),
+          messageBuilder: (e) => "Foo: ${e.toString()}",
         ).errorMessage,
-        'Foo: TimeoutException: Timeout');
+        "Foo: TimeoutException: Timeout",);
     expect(
         ErrorMessageModal(
-          TimeoutException('Timeout'),
-          StackTrace.fromString(''),
-          messageBuilder: (e) => 'Foo: ${e.toString()}',
-          errorMessage: 'Tada',
+          TimeoutException("Timeout"),
+          StackTrace.fromString(""),
+          messageBuilder: (e) => "Foo: ${e.toString()}",
+          errorMessage: "Tada",
         ).errorMessage,
-        'Tada');
+        "Tada",);
   });
 }

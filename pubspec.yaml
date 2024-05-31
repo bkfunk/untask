@@ -13,6 +13,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  repository:
+    path: packages/repository
   flutter_form_builder: ^9.2.1
   form_builder_validators: ^9.1.0
   freezed_annotation: ^2.4.1

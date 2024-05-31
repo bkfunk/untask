@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 // LATER: Add ChoiceChipSection with a divider and optional headline
 // part 'choice_chip_set.g.dart';
