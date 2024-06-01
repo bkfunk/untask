@@ -4,12 +4,12 @@ import "package:untask/src/features/memos/data/memos_repository.dart";
 import "routing/app_router.dart";
 
 class AppController extends InheritedWidget {
-  final FakeMemosRepository memosRepository;
+  final MemosRepository memosRepository;
 
   AppController({
     super.key,
     required super.child,
-    FakeMemosRepository? memosRepository,
+    MemosRepository? memosRepository,
   }) : memosRepository = memosRepository ?? FakeMemosRepository();
 
   static AppController of(BuildContext context) {
@@ -34,6 +34,7 @@ class UntaskApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppController(
+      memosRepository: IsarMemosRepository(),
       child: MaterialApp.router(
         // return MaterialApp.router(
         routerConfig: getGoRouter(),

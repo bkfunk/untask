@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:isar/isar.dart";
 import "package:nanoid/nanoid.dart";
 import "package:repository/repository.dart";
 
@@ -83,6 +84,64 @@ class FakeMemosRepository extends FakeRepository<Memo, MemoID>
   }
 }
 
+class IsarMemosRepository extends IsarRepository<Memo, IsarMemo, MemoID>
+    with MemosRepository {
+  IsarMemosRepository({required super.db});
+
+  @override
+  Future<void> delete(MemoID id) {
+    // TODO: implement delete
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Memo?> get(MemoID id) {
+    return db.collection<IsarMemo>().where().memoIDEqualTo(id).findFirst().then(
+      (value) {
+        if (value != null) {
+          return Memo(
+            id: value.memoID,
+            createdAt: value.createdAt,
+            title: value.title,
+          );
+        }
+        return null;
+      },
+    );
+    // TODO: implement get
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Memo>> getAll() {
+    // TODO: implement getAll
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> insert(Memo item) {
+    // TODO: implement insert
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> update(Memo item) {
+    // TODO: implement update
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<Memo?> watch(MemoID id) {
+    // TODO: implement watch
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<Memo>> watchList() {
+    // TODO: implement watchList
+    throw UnimplementedError();
+  }
+}
 // SOON: Implement the real MemosRepository
   // final int _delay = 1;
   // final _memosController = StreamController<List<Memo>>.broadcast(
