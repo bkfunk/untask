@@ -1,6 +1,8 @@
 name: repository
 description: "Repository for the untask project"
+description: "Repository for the untask project"
 version: 0.0.1
+homepage: https://example.com
 homepage: https://example.com
 
 environment:
@@ -10,15 +12,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
+  isar: ^4.0.0-dev.14
+  isar_flutter_libs: ^4.0.0-dev.14
   path_provider: ^2.1.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-  isar_generator: ^3.1.0+1
   build_runner: ^2.4.10
 
 # For information on the generic Dart part of this file, see the

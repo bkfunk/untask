@@ -5,6 +5,7 @@ import "package:nanoid/nanoid.dart";
 import "package:repository/repository.dart";
 
 import "../models/memo.dart";
+import "dto/isar_memo.dart";
 
 // SOON: Make a repository base class, then extend it with a create method
 // SOON: Under repository there is a storage class that implements the repository
@@ -96,18 +97,18 @@ class IsarMemosRepository extends IsarRepository<Memo, IsarMemo, MemoID>
 
   @override
   Future<Memo?> get(MemoID id) {
-    return db.collection<IsarMemo>().where().memoIDEqualTo(id).findFirst().then(
-      (value) {
-        if (value != null) {
-          return Memo(
-            id: value.memoID,
-            createdAt: value.createdAt,
-            title: value.title,
-          );
-        }
-        return null;
-      },
-    );
+    // return db.collection<IsarMemo>().where().memoIDEqualTo(id).findFirst().then(
+    //   (value) {
+    //     if (value != null) {
+    //       return Memo(
+    //         id: value.memoID,
+    //         createdAt: value.createdAt,
+    //         title: value.title,
+    //       );
+    //     }
+    //     return null;
+    //   },
+    // );
     // TODO: implement get
     throw UnimplementedError();
   }
@@ -121,7 +122,8 @@ class IsarMemosRepository extends IsarRepository<Memo, IsarMemo, MemoID>
   @override
   Future<void> insert(Memo item) {
     // TODO: implement insert
-    throw UnimplementedError();
+    // throw UnimplementedError();
+    return Future.value();
   }
 
   @override
@@ -139,7 +141,10 @@ class IsarMemosRepository extends IsarRepository<Memo, IsarMemo, MemoID>
   @override
   Stream<List<Memo>> watchList() {
     // TODO: implement watchList
-    throw UnimplementedError();
+    return Stream.fromIterable([
+      [Memo(title: "Call dentist")],
+    ]);
+    // throw UnimplementedError();
   }
 }
 // SOON: Implement the real MemosRepository
