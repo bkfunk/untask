@@ -37,7 +37,6 @@ class DataItemImpl implements DataItem<String> {
 class FakeRepositoryImpl extends FakeRepository<DataItemImpl, String> {
   FakeRepositoryImpl({super.delay})
       : super(fakeItems: DataItemImpl.defaultList());
-  // Rest of the code...
 }
 
 void main() {

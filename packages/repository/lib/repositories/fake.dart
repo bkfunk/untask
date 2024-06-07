@@ -3,17 +3,17 @@ import 'package:flutter/foundation.dart';
 import 'package:repository/data_items/data_item.dart';
 import 'package:repository/repositories/repository.dart';
 
-class FakeRepository<T extends DataItem<I>, I extends IDType>
-    extends Repository<T, I> {
-  final List<T> fakeItems;
-  final StreamController<List<T>> _controller;
+class FakeRepository<MODEL extends DataItem<MODEL_ID>, MODEL_ID extends IDType>
+    extends Repository<MODEL, MODEL_ID> {
+  final List<MODEL> fakeItems;
+  final StreamController<List<MODEL>> _controller;
 
   final Duration delay;
 
   FakeRepository({
     this.delay = const Duration(milliseconds: 500),
     this.fakeItems = const [],
-  }) : _controller = StreamController<List<T>>.broadcast() {
+  }) : _controller = StreamController<List<MODEL>>.broadcast() {
     _controller
       ..onListen = () async {
         debugPrint("Fake items stream listener added");
@@ -27,6 +27,7 @@ class FakeRepository<T extends DataItem<I>, I extends IDType>
     });
   }
 
+  @override
   void dispose() {
     _controller.close();
   }
@@ -36,50 +37,50 @@ class FakeRepository<T extends DataItem<I>, I extends IDType>
   }
 
   @override
-  Future<T?> get(I id) async {
+  Future<MODEL?> get(MODEL_ID id) async {
     await _delayed();
     return _get(fakeItems, id);
   }
 
   @override
-  Future<List<T>> getAll() async {
-    await _delayed();
-    return Future.value(fakeItems);
+  Future<MODEL?> create(MODEL item) {
+    insert(item);
+    return Future.value(item);
   }
 
   @override
-  Future<void> insert(T item) async {
+  Future<void> insert(MODEL item) async {
     await _delayed();
     fakeItems.add(item);
     _controller.add(fakeItems);
   }
 
   @override
-  Future<void> update(T item) async {
+  Future<void> update(MODEL item) async {
     await _delayed();
     fakeItems[fakeItems.indexWhere((i) => i.id == item.id)] = item;
     _controller.add(fakeItems);
   }
 
   @override
-  Future<void> delete(I id) async {
+  Future<void> delete(MODEL_ID id) async {
     await _delayed();
     fakeItems.removeWhere((item) => item.id == id);
     _controller.add(fakeItems);
   }
 
   @override
-  Stream<List<T>> watchList() {
+  Stream<List<MODEL>> watchList() {
     return _controller.stream;
   }
 
   @override
-  Stream<T?> watch(I id) {
+  Stream<MODEL?> watch(MODEL_ID id) {
     return watchList().map((items) => _get(items, id));
   }
 
   // Synchronous helper method
-  T? _get(List<T> items, I id) {
+  MODEL? _get(List<MODEL> items, MODEL_ID id) {
     try {
       return items.firstWhere((element) => element.id == id);
     } catch (e) {
@@ -97,8 +98,4 @@ class FakeRepository<T extends DataItem<I>, I extends IDType>
 
   @override
   int get hashCode => fakeItems.hashCode ^ delay.hashCode;
-
-  // static List<T> _defaultFakeItems<T>() {
-  //   return <T>[];
-  // }
 }
